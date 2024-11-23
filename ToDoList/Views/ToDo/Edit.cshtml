@@ -1,0 +1,45 @@
+﻿@model ToDoList.Models.ToDoItem
+
+<h2>Edit Task</h2>
+
+<form asp-action="Edit">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Details"></label>
+        <input asp-for="Details" class="form-control" />
+        <span asp-validation-for="Details" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AssignedTo"></label>
+        <input asp-for="AssignedTo" class="form-control" />
+        <span asp-validation-for="AssignedTo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateStarted"></label>
+        <input asp-for="DateStarted" class="form-control" />
+        <span asp-validation-for="DateStarted" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateOfCompletion"></label>
+        <input asp-for="DateOfCompletion" class="form-control" />
+        <span asp-validation-for="DateOfCompletion" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <input asp-for="Status" class="form-control" />
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a href="@Url.Action("Index")">Back to list</a>

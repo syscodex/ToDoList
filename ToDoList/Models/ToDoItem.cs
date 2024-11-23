@@ -11,23 +11,54 @@ namespace ToDoList.Models
         OnHold
     }
 
+    /// <summary>
+    /// Represents a single To-Do item with validation for user input.
+    /// </summary>
     public class ToDoItem
     {
-        public int Id { get; set; } // primary key
+        public int Id { get; set; } // Primary key
 
-        [Required]
-        [StringLength(100)]
-        public required string Title { get; set; } // required property
+        [Required(ErrorMessage = "Title is required.")]
+        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters.")]
+        public required string Title { get; set; }
 
+        [DataType(DataType.DateTime)]
         public DateTime DateStarted { get; set; } = DateTime.Now;
 
-        public DateTime? DateOfCompletion { get; set; } // nullable DateTime
+        [DataType(DataType.DateTime)]
+        public DateTime? DateOfCompletion { get; set; }
 
-        [StringLength(500)]
-        public required string Details { get; set; } // required property
+        // Custom validation to ensure DateOfCompletion is after DateStarted
+        public bool IsValidCompletionDate()
+        {
+            return !DateOfCompletion.HasValue || DateOfCompletion > DateStarted;
+        }
 
-        public required string AssignedTo { get; set; } // required property
+        public class ToDoItemValidator : ValidationAttribute
+        {
+            public override bool IsValid(object value)
+            {
+                var toDoItem = value as ToDoItem;
+                if (toDoItem == null)
+                    return false;
 
-        public TaskStatus Status { get; set; } = TaskStatus.Pending;
+                return toDoItem.IsValidCompletionDate();
+
+            }
+        }
+        /// <summary>
+        
+
+            [Required(ErrorMessage = "Details are required.")]
+            [StringLength(500, ErrorMessage = "Details cannot exceed 500 characters.")]
+            public required string Details { get; set; }
+
+            [Required(ErrorMessage = "Please specify who the task is assigned to.")]
+            [StringLength(100, ErrorMessage = "AssignedTo cannot be longer than 100 characters.")]
+            public required string AssignedTo { get; set; }
+
+            public TaskStatus Status { get; set; } = TaskStatus.Pending;
+        }
     }
-}
+
+

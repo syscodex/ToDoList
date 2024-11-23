@@ -1,0 +1,19 @@
+﻿@model ToDoList.Models.ToDoItem
+
+<h2>Delete Task</h2>
+
+<h3>Are you sure you want to delete this task?</h3>
+<div>
+    <h4>@Model.Title</h4>
+    <p><strong>Status:</strong> @Model.Status</p>
+    <p><strong>Assigned To:</strong> @Model.AssignedTo</p>
+    <p><strong>Details:</strong> @Model.Details</p>
+    <p><strong>Start Date:</strong> @Model.DateStarted</p>
+    <p><strong>Completion Date:</strong> @Model.DateOfCompletion</p>
+</div>
+
+<form method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+</form>
