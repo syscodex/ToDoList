@@ -25,8 +25,8 @@ else
                     <td>@item.Status</td>
                     <td>@item.AssignedTo</td>
                     <td>
-                        <a href="@Url.Action("Edit", "Todo", new { id = item.Id })">Edit</a> |
-                        <a href="@Url.Action("Delete", "Todo", new { id = item.Id })">Delete</a>
+                        <button class="btn btn-primary edit-btn" data-id="@item.Id" data-title="@item.Title">Edit</button>
+                        <button class="btn btn-danger delete-btn" data-id="@item.Id">Delete</button>
                     </td>
                 </tr>
             }

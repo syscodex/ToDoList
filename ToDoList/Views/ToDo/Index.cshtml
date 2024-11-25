@@ -1,35 +1,86 @@
-﻿@model IEnumerable<ToDoList.Models.ToDoItem>
+﻿@model List<ToDoList.Models.ToDoItem>
 
-<h2>To-Do List</h2>
+@{
+    ViewData["Title"] = "To-Do List";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Date Started</th>
-            <th>Date Of Completion</th>
-            <th>Details</th>
-            <th>Assigned To</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.DateStarted.ToString("yyyy-MM-dd")</td>
-                <td>@(item.DateOfCompletion?.ToString("yyyy-MM-dd") ?? "Not Set")</td>
-                <td>@item.Details</td>
-                <td>@item.AssignedTo</td>
-                <td>@item.Status</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<a asp-action="Create" class="btn btn-primary">Create New Task</a>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar vh-100">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fa fa-list"></i> All Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-calendar"></i> Today
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-clock"></i> Overdue
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-user"></i> Assigned To Me
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-cog"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">@ViewData["Title"]</h1>
+                <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary">Create New Task</a>
+            </div>
+
+            <!-- Task List -->
+            <div class="row">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Title</h5>
+                                    <p>Status: <span class="badge @ToDoHelpers.GetStatusClass(item.Status)">@item.Status</span></p>
+                                    <p>Assigned To: @item.AssignedTo</p>
+                                    <p>Date Started: @item.DateStarted.ToString("MMM dd, yyyy hh:mm tt")</p>
+
+                                    @if (item?.DateOfCompletion.HasValue ?? false)
+                                    {
+                                        <p>Date Completed: @item.DateOfCompletion.Value.ToString("MMM dd, yyyy hh:mm tt")</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Date Completed: Not Completed</p>
+                                    }
+
+                                    <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-primary">Edit</a>
+                                    <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No tasks available.</p>
+                }
+            </div>
+        </main>
+    </div>
+</div>

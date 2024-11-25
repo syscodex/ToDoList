@@ -13,10 +13,13 @@ namespace ToDoList.Controllers
             _logger = logger;
         }
 
+
+        // This action will now render the landing page
         public IActionResult Index()
         {
             return View("LandingPage");
         }
+
 
         public IActionResult Privacy()
         {

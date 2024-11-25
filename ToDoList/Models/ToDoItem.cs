@@ -47,18 +47,16 @@ namespace ToDoList.Models
             }
         }
         /// <summary>
-        
 
-            [Required(ErrorMessage = "Details are required.")]
-            [StringLength(500, ErrorMessage = "Details cannot exceed 500 characters.")]
-            public required string Details { get; set; }
 
-            [Required(ErrorMessage = "Please specify who the task is assigned to.")]
-            [StringLength(100, ErrorMessage = "AssignedTo cannot be longer than 100 characters.")]
-            public required string AssignedTo { get; set; }
+        [Required(ErrorMessage = "Details are required.")]
+        [StringLength(500, ErrorMessage = "Details cannot exceed 500 characters.")]
+        public required string Details { get; set; }
 
-            public TaskStatus Status { get; set; } = TaskStatus.Pending;
-        }
+        [Required(ErrorMessage = "Please specify who the task is assigned to.")]
+        [StringLength(100, ErrorMessage = "AssignedTo cannot be longer than 100 characters.")]
+        public required string AssignedTo { get; set; }
+
+        public TaskStatus Status { get; set; } = TaskStatus.Pending;
     }
-
-
+}

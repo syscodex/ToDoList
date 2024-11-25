@@ -1,3 +1,11 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+
+
 html {
   font-size: 14px;
 }
@@ -19,4 +27,51 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+    .btn-primary:hover {
+        background-color: #004085;
+        border-color: #003366;
+    }
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+
+
+
+/* Status Badge Color Coding */
+.badge {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+/* Different status colors */
+.completed {
+    background-color: #28a745;
+    color: white;
+}
+
+.in-progress {
+    background-color: #ffc107;
+    color: white;
+}
+
+.pending {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Hover Effect on Cards */
+.card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease-in-out;
 }
