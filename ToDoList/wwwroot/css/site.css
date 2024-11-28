@@ -65,13 +65,54 @@ body {
     color: white;
 }
 
+/* Custom style for InProgress status */
+.badge-inprogress {
+    background-color: #007bff; /* Use a strong blue background */
+    color: white !important; /* Ensure the text is white */
+}
+
+.fas.fa-hourglass-half.text-white {
+    color: white !important; /* Ensure icon is white */
+}
+
+/* Custom style for InProgress status */
+
+
 .pending {
     background-color: #dc3545;
     color: white;
 }
 
+
+
+
+
 /* Hover Effect on Cards */
 .card:hover {
     transform: translateY(-5px);
-    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible column size */
+    gap: 1rem; /* Spacing between cards */
+}
+
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+    color: white;
 }
