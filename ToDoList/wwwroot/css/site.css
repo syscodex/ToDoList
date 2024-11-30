@@ -116,3 +116,53 @@ body {
     background-color: #6c757d;
     color: white;
 }
+
+
+
+
+
+
+/*NO task available*/
+
+.empty-state {
+    background-color: #f0f8ff; /* Light blue background */
+    color: #555; /* Darker text for contrast */
+    padding: 20px;
+    border-radius: 8px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.empty-state i {
+    font-size: 40px;
+    color: #5bc0de;
+}
+
+.empty-state p {
+    font-size: 1.2em;
+    margin: 15px 0;
+}
+
+.empty-state .btn {
+    margin-top: 10px;
+}
+
+@media (max-width: 576px) {
+    .btn-lg {
+        font-size: 16px; /* Adjust button text size */
+        padding: 1rem 1.5rem; /* Adjust button padding */
+    }
+
+    .empty-state p {
+        font-size: 1.2rem; /* Adjust the paragraph font size for readability */
+    }
+}

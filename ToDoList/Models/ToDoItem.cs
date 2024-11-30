@@ -8,7 +8,7 @@ namespace ToDoList.Models
     {
         [Display(Name = "Pending")]
         Pending,
-        [Display(Name = "Progress")]
+        [Display(Name = "In Progress")] //change dp name
         InProgress,
         [Display(Name = "Completed")]
         Completed,

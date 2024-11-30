@@ -9,7 +9,11 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">@ViewData["Title"]</h1>
-        <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary">Create New Task</a>
+        @if (Model != null && Model.Any())
+        {
+            <!-- Only show this button if there are tasks -->
+            <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary">Create New Task</a>
+        }
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -79,8 +83,13 @@
         }
         else
         {
-            <div class="alert alert-info">
-                <i class="fas fa-exclamation-circle"></i> No tasks available. Start by creating a task!
+            <!-- Empty State for No Tasks -->
+            <div class="alert alert-info text-center empty-state">
+                <i class="fas fa-check-circle"></i>
+                <p>Looks like you're all caught up! Start by creating a task.</p>
+
+                <!-- Larger Create New Task Button -->
+                <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary btn-lg">Create New Task</a>
             </div>
         }
     </div>
