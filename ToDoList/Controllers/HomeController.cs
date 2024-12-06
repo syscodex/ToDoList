@@ -13,23 +13,29 @@ namespace ToDoList.Controllers
             _logger = logger;
         }
 
-
-        // This action will now render the landing page
+        // Render the landing page
         public IActionResult Index()
         {
             return View("LandingPage");
         }
 
-
+        // Render the privacy policy page
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // Handle application errors
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var errorModel = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            _logger.LogError("Error occurred with RequestId: {RequestId}", errorModel.RequestId);
+            return View(errorModel);
         }
     }
 }

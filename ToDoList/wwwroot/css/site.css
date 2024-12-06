@@ -4,8 +4,6 @@
     box-sizing: border-box;
 }
 
-
-
 html {
   font-size: 14px;
 }
@@ -39,12 +37,28 @@ body {
         border-color: #003366;
     }
 
+/**************************************************************************************************************************/
+
+
+/*Landing page*/
+
 .card-title {
     font-size: 1.2rem;
     font-weight: bold;
 }
 
+/* Custom Styles for the Cards in the Landing Page */
+.landing-card-body {
+    padding: 1.5rem;
+    background-color: #fff; /* Optional: set a specific background color for the card body */
+}
 
+/* Optional: Customize hover effect for these specific cards */
+.custom-card:hover .landing-card-body {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/**************************************************************************************************************************/
 
 
 /* Status Badge Color Coding */
@@ -65,42 +79,6 @@ body {
     color: white;
 }
 
-/* Custom style for InProgress status */
-.badge-inprogress {
-    background-color: #007bff; /* Use a strong blue background */
-    color: white !important; /* Ensure the text is white */
-}
-
-.fas.fa-hourglass-half.text-white {
-    color: white !important; /* Ensure icon is white */
-}
-
-/* Custom style for InProgress status */
-
-
-.pending {
-    background-color: #dc3545;
-    color: white;
-}
-
-
-
-
-
-/* Hover Effect on Cards */
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-}
-
-
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible column size */
-    gap: 1rem; /* Spacing between cards */
-}
-
 
 .badge-success {
     background-color: #28a745;
@@ -118,8 +96,87 @@ body {
 }
 
 
+/* Custom style for InProgress status */
+.badge-inprogress {
+    background-color: #007bff; /* Use a strong blue background */
+    color: white !important; /* Ensure the text is white */
+}
+
+.fas.fa-hourglass-half.text-white {
+    color: white !important; /* Ensure icon is white */
+}
+
+/* Custom style for InProgress status */
+
+.pending {
+    background-color: #dc3545;
+    color: white;
+}
+
+/**************************************************************************************************************************/
+
+/*Index.cshtml*/
+
+/* Hover Effect on Cards */
+/* Scoped styling for text-muted inside #toDoListPage */
+#toDoListPage .text-muted {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible column size */
+    gap: 1rem; /* Spacing between cards */
+}
+
+/* Prevent overflow in task title */
+.card-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.25rem;
+}
+
+
+
+/* Limit the task details section and prevent overflow */
+.card-body {
+    transition: padding 0.3s ease;
+}
+
+
+/* Expandable text on hover or click (when details are available) */
+.card-body p.expandable:hover {
+        max-height: none; /* Allow full text to be visible when hovered */
+        -webkit-line-clamp: unset; /* Remove the line clamp */
+}
+
+
+/* Optional: Make sure collapsible section does not cause overflow */
+.collapse {
+    max-height: 300px; /* You can adjust this to control how much content is shown */
+    overflow-y: auto;
+}
+
+/* Adjust layout and prevent footer overlap */
+main {
+    overflow: hidden; /* Prevents any overflowing content affecting layout */
+}
+
+/* Optional: Add some padding to the footer to avoid card collision */
+.footer-space {
+    padding-bottom: 40px;
+}
 
 
 /*NO task available*/
@@ -166,3 +223,16 @@ body {
         font-size: 1.2rem; /* Adjust the paragraph font size for readability */
     }
 }
+
+
+/* Collapsible Section */
+.collapse-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+.collapse-content.show {
+        max-height: 500px; /* Adjust based on your content's max height */
+    }
+
+

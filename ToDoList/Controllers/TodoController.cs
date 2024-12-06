@@ -2,35 +2,67 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Data;
 using ToDoList.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ToDoList.Controllers
 {
     public class ToDoController : Controller
     {
         private readonly ToDoListDbContext _context;
+        private readonly ILogger<ToDoController> _logger; // Add ILogger
 
-        public ToDoController(ToDoListDbContext context)
+        // Inject ILogger into the controller
+        public ToDoController(ToDoListDbContext context, ILogger<ToDoController> logger)
         {
             _context = context;
+            _logger = logger; // Initialize the logger
         }
 
         // **INDEX**: Display all To-Do Items
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery, string statusFilter, string assigneeFilter, DateTime? startDateFilter, DateTime? endDateFilter)
         {
-            var toDoItems = await _context.ToDoItems.ToListAsync();
-            if (toDoItems == null)
+            var tasks = _context.ToDoItems.AsQueryable();
+
+            // Apply search query filter
+            if (!string.IsNullOrEmpty(searchQuery))
             {
-                toDoItems = new List<ToDoItem>(); // Ensure it's never null
+                tasks = tasks.Where(t => t.Title.Contains(searchQuery) || t.Details.Contains(searchQuery));
             }
-            if (!toDoItems.Any())
+
+            // Apply status filter (Enum to String comparison)
+            if (!string.IsNullOrEmpty(statusFilter))
             {
-                ViewData["Message"] = "No tasks available.";
+                tasks = tasks.Where(t => t.Status.ToString() == statusFilter);
             }
-            return View(toDoItems);
+
+            // Apply assignee filter
+            if (!string.IsNullOrEmpty(assigneeFilter))
+            {
+                tasks = tasks.Where(t => t.AssignedTo.Contains(assigneeFilter));
+            }
+
+            // Apply start date filter
+            if (startDateFilter.HasValue)
+            {
+                tasks = tasks.Where(t => t.DateStarted >= startDateFilter.Value);
+            }
+
+            // Apply end date filter
+            if (endDateFilter.HasValue)
+            {
+                tasks = tasks.Where(t => t.DateOfCompletion <= endDateFilter.Value);
+            }
+
+            // Pass filter parameters to the view for persistence in the UI
+            ViewData["SearchQuery"] = searchQuery;
+            ViewData["StatusFilter"] = statusFilter;
+            ViewData["AssigneeFilter"] = assigneeFilter;
+            ViewData["StartDateFilter"] = startDateFilter;
+            ViewData["EndDateFilter"] = endDateFilter;
+
+            // Return the filtered list to the view
+            return View(await tasks.ToListAsync());
         }
-
-   
-
 
 
         // **CREATE**: Display the create form (GET)
@@ -44,19 +76,16 @@ namespace ToDoList.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Details,AssignedTo,DateStarted,DateOfCompletion,Status")] ToDoItem todoItem)
         {
-            // Validate that DateOfCompletion is later than DateStarted
-            if (todoItem.DateOfCompletion <= todoItem.DateStarted)
-            {
-                ModelState.AddModelError("DateOfCompletion", "Date of Completion must be later than Date Started.");
-            }
-
             if (ModelState.IsValid)
             {
                 _context.Add(todoItem);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Created a new ToDoItem with Title: {Title}", todoItem.Title);
                 return RedirectToAction(nameof(Index));
             }
-            return View(todoItem); // Return to form with validation errors
+
+            _logger.LogWarning("Failed to create ToDoItem. Validation errors: {Errors}", string.Join(", ", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))));
+            return View(todoItem);
         }
 
         // **EDIT**: Display the edit form for a specific item (GET)
@@ -64,12 +93,14 @@ namespace ToDoList.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Edit action received null id.");
                 return NotFound();
             }
 
             var todoItem = await _context.ToDoItems.FindAsync(id);
             if (todoItem == null)
             {
+                _logger.LogWarning("ToDoItem with ID {Id} not found during Edit action.", id);
                 return NotFound();
             }
 
@@ -83,13 +114,8 @@ namespace ToDoList.Controllers
         {
             if (id != todoItem.Id)
             {
+                _logger.LogWarning("Edit action received mismatched ID: Expected {ExpectedId}, Found {FoundId}", id, todoItem.Id);
                 return NotFound();
-            }
-
-            // Validate that DateOfCompletion is later than DateStarted
-            if (todoItem.DateOfCompletion <= todoItem.DateStarted)
-            {
-                ModelState.AddModelError("DateOfCompletion", "Date of Completion must be later than Date Started.");
             }
 
             if (ModelState.IsValid)
@@ -98,15 +124,19 @@ namespace ToDoList.Controllers
                 {
                     _context.Update(todoItem);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Updated ToDoItem with ID {Id} and Title: {Title}", todoItem.Id, todoItem.Title);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ToDoItemExists(todoItem.Id))
                     {
+                        _logger.LogWarning("ToDoItem with ID {Id} not found during update.", todoItem.Id);
                         return NotFound();
                     }
-                    throw; // Let the exception propagate for logging/debugging
+
+                    _logger.LogError("Error occurred during updating ToDoItem with ID {Id}.", todoItem.Id);
+                    throw;
                 }
             }
 
@@ -118,12 +148,14 @@ namespace ToDoList.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Delete action received null id.");
                 return NotFound();
             }
 
             var todoItem = await _context.ToDoItems.FirstOrDefaultAsync(m => m.Id == id);
             if (todoItem == null)
             {
+                _logger.LogWarning("ToDoItem with ID {Id} not found during Delete action.", id);
                 return NotFound();
             }
 
@@ -140,7 +172,13 @@ namespace ToDoList.Controllers
             {
                 _context.ToDoItems.Remove(todoItem);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Deleted ToDoItem with ID {Id} and Title: {Title}", id, todoItem.Title);
             }
+            else
+            {
+                _logger.LogWarning("Attempted to delete non-existent ToDoItem with ID {Id}.", id);
+            }
+
             return RedirectToAction(nameof(Index)); // Redirect after deletion
         }
 
@@ -149,6 +187,5 @@ namespace ToDoList.Controllers
         {
             return _context.ToDoItems.Any(e => e.Id == id);
         }
-
     }
 }

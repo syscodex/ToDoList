@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<ToDoList.Models.ToDoItem>
+    
+   
 
-<h2>All Tasks</h2>
 
 @if (Model == null || !Model.Any())
 {
@@ -8,7 +9,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Title</th>
@@ -32,4 +33,5 @@ else
             }
         </tbody>
     </table>
+
 }

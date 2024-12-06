@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ToDoList.Models;  // Assuming your TaskStatus and Priority enum are in the Models namespace
 
 namespace ToDoList.Helpers
 {
@@ -14,7 +15,7 @@ namespace ToDoList.Helpers
                 ToDoList.Models.TaskStatus.Completed => ("badge-success text-white", "fas fa-check-circle text-white"),
                 ToDoList.Models.TaskStatus.InProgress => ("badge-inprogress text-white", "fas fa-hourglass-half text-white"),
                 ToDoList.Models.TaskStatus.Pending => ("badge-warning text-white", "fas fa-circle-notch text-white"),
-                ToDoList.Models.TaskStatus.OnHold => ("badge-secondary text-dark", "fas fa-pause-circle text-dark"), // Make text dark for OnHold
+                ToDoList.Models.TaskStatus.OnHold => ("badge-secondary text-dark", "fas fa-pause-circle text-dark"),
                 _ => ("badge-secondary text-dark", "fas fa-question-circle text-white")
             };
         }
@@ -29,5 +30,7 @@ namespace ToDoList.Helpers
                                          .FirstOrDefault() as DisplayAttribute;
             return displayAttribute?.Name ?? status.ToString();
         }
+
+
     }
 }
