@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ToDoList.Models.ToDoItem>
+@using ToDoList.Helpers
+
+@foreach (var item in Model)
+{
+    <div class="card shadow-lg mb-4" style="cursor: pointer;">
+        <div class="card-body">
+            <h5 class="card-title">@item.Title</h5>
+            <p class="card-text">
+                @((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" : item.Details.Length > 80 ? item.Details.Substring(0, 80) + "..." : item.Details))
+            </p>
+
+            @if (item.Status != null)
+            {
+                var (badgeClass, iconClass) = ToDoHelpers.GetStatusClass(item.Status);
+                <div class="d-flex align-items-center mt-2">
+                    <span class="badge rounded-pill @badgeClass" style="font-size: 0.9em;" aria-label="@ToDoHelpers.GetStatusDisplayName(item.Status)">
+                        <i class="@iconClass" aria-hidden="true"></i> @ToDoHelpers.GetStatusDisplayName(item.Status)
+                    </span>
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(item.AssignedTo))
+            {
+                <div class="d-flex align-items-center mt-3">
+                    <i class="fas fa-user-circle me-2" style="font-size: 1.5rem;" title="Assigned to"></i>
+                    <span class="text-muted">@item.AssignedTo</span>
+                </div>
+            }
+
+            <div class="d-flex align-items-center mt-2">
+                <i class="fas fa-calendar-alt me-2" title="Date Started"></i>
+                <small class="text-muted" aria-label="Started date">
+                    Started: <time datetime="@item.DateStarted.ToString("yyyy-MM-dd")">@item.DateStarted.ToString("MM/dd/yyyy")</time>
+                </small>
+
+                @if (ViewData["ViewType"]?.ToString() == "floating")
+                {
+                    <i class="fas fa-clock ms-2" title="Time Started"></i>
+                    <small class="text-muted" style="font-size: 0.8em;">
+                        @ToDoHelpers.FormatDateTimeWithTime(item.DateStarted)
+                    </small>
+                }
+            </div>
+
+            @if (item.DateOfCompletion.HasValue)
+            {
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fas fa-check-circle me-2" title="Date Completed"></i>
+                    <small class="text-muted" aria-label="Completion date">
+                        Completed: <time datetime="@item.DateOfCompletion.Value.ToString("yyyy-MM-dd")">@item.DateOfCompletion.Value.ToString("MM/dd/yyyy")</time>
+                    </small>
+
+                    @if (ViewData["ViewType"]?.ToString() == "floating")
+                    {
+                        <i class="fas fa-clock ms-2" title="Time Completed"></i>
+                        <small class="text-muted" style="font-size: 0.8em;">
+                            @ToDoHelpers.FormatDateTimeWithTime(item.DateOfCompletion)
+                        </small>
+                    }
+                </div>
+            }
+
+            <!-- Edit and Delete Buttons -->
+            <div class="d-flex justify-content-between mt-3">
+                <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+}

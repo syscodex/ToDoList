@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<ToDoList.Models.ToDoItem>
-    
-   
 
+<h2>To-Do List</h2>
 
 @if (Model == null || !Model.Any())
 {
@@ -13,6 +12,7 @@ else
         <thead>
             <tr>
                 <th>Title</th>
+                <td>Details</td>
                 <th>Status</th>
                 <th>Assigned To</th>
                 <th>Actions</th>
@@ -23,11 +23,12 @@ else
             {
                 <tr>
                     <td>@item.Title</td>
+                    <td>@item.Details</td>
                     <td>@item.Status</td>
                     <td>@item.AssignedTo</td>
                     <td>
                         <button class="btn btn-primary edit-btn" data-id="@item.Id" data-title="@item.Title">Edit</button>
-                        <button class="btn btn-danger delete-btn" data-id="@item.Id">Delete</button>
+                        <button class="btn btn-danger" onclick="deleteTask(@item.Id)">Delete</button>
                     </td>
                 </tr>
             }

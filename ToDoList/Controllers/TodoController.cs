@@ -9,13 +9,13 @@ namespace ToDoList.Controllers
     public class ToDoController : Controller
     {
         private readonly ToDoListDbContext _context;
-        private readonly ILogger<ToDoController> _logger; // Add ILogger
+        private readonly ILogger<ToDoController> _logger; 
 
         // Inject ILogger into the controller
         public ToDoController(ToDoListDbContext context, ILogger<ToDoController> logger)
         {
             _context = context;
-            _logger = logger; // Initialize the logger
+            _logger = logger; 
         }
 
         // **INDEX**: Display all To-Do Items

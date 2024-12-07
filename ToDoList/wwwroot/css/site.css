@@ -60,45 +60,49 @@ body {
 
 /**************************************************************************************************************************/
 
-
+.small-time {
+    font-size: 0.8em;
+    color: #6c757d;
+}
 /* Status Badge Color Coding */
 .badge {
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 20px;
-}
+    font-size: 5px;
+    padding: 6px 12px; /* Slightly adjusted padding for a more modern look */
+    border-radius: 25px; /* Increased border radius for softer edges */
+    align-items: center; /* Center the icon and text */
+    cursor: pointer; /* Indicate that the badge is interactive */
+} 
 
 /* Different status colors */
 .completed {
-    background-color: #28a745;
+    background: linear-gradient(90deg, #28a745 0%, #219638 100%); /* Gradient for completed */
     color: white;
 }
 
 .in-progress {
-    background-color: #ffc107;
-    color: white;
+    background: linear-gradient(90deg, #ffc107 0%, #e0a800 100%); /* Gradient for in-progress */
+    color: black;
 }
 
-
 .badge-success {
-    background-color: #28a745;
+    background: linear-gradient(90deg, #28a745 0%, #219638 100%); /* Gradient for success */
     color: white;
 }
 
 .badge-warning {
-    background-color: #ffc107;
+    background: linear-gradient(90deg, #ffc107 0%, #e0a800 100%); /* Gradient for warning */
     color: black;
 }
 
 .badge-secondary {
-    background-color: #6c757d;
+    background: linear-gradient(90deg, #6c757d 0%, #5a6268 100%); /* Gradient for secondary */
     color: white;
-}
+}  
 
 
 /* Custom style for InProgress status */
 .badge-inprogress {
-    background-color: #007bff; /* Use a strong blue background */
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%); /* Add a gradient for depth */
     color: white !important; /* Ensure the text is white */
 }
 

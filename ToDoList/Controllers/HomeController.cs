@@ -19,6 +19,7 @@ namespace ToDoList.Controllers
             return View("LandingPage");
         }
 
+       
         // Render the privacy policy page
         public IActionResult Privacy()
         {

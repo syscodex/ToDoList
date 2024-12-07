@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ToDoList.Models;  // Assuming your TaskStatus and Priority enum are in the Models namespace
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ToDoList.Helpers
 {
@@ -31,6 +31,12 @@ namespace ToDoList.Helpers
             return displayAttribute?.Name ?? status.ToString();
         }
 
-
+        /// <summary>
+        /// Formats the DateTime for display with both date and time (e.g., "MM/dd/yyyy hh:mm tt").
+        /// </summary>
+        public static string FormatDateTimeWithTime(DateTime? dateTime)
+        {
+            return dateTime?.ToString("MM/dd/yyyy hh:mm tt") ?? "N/A";
+        }
     }
 }

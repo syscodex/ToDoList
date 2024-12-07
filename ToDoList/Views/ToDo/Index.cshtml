@@ -4,41 +4,46 @@
 @{
     ViewData["Title"] = "To-Do List";
 }
-<style>
-  
 
+<style>
+    /* Add custom styles if needed */
 </style>
 
 <!-- Search and Filter Form -->
 <form method="get" class="mb-4">
-    <div class="row g-2 align-items-center">
-        <div class="col-md-4">
+    <div class="row g-4 align-items-center">
+        <div class="col-md-5">
             <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                <input type="text" name="searchQuery" class="form-control"
+                <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" name="searchQuery"
+                       class="form-control border-start-0"
                        placeholder="Search tasks by title or details"
-                       value="@ViewData["SearchQuery"]" />
+                       value="@ViewData["SearchQuery"]"
+                       aria-label="Search tasks" />
             </div>
         </div>
-        <div class="col-md-3">
-            <select name="statusFilter" class="form-select">
+
+        <div class="col-md-4">
+            <label for="statusFilter" class="form-label visually-hidden">Status Filter</label>
+            <select id="statusFilter" name="statusFilter" class="form-select">
                 <option value="">All Tasks</option>
-                <option value="Pending"
-                        selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>
-                <option value="InProgress"
-                        selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>
-                <option value="Completed"
-                        selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>
-                <option value="OnHold"
-                        selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>
+                <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>
+                <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>
+                <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>
+                <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>
             </select>
         </div>
-        <div class="col-md-2">
+
+        <div class="col-md-3">
             <button type="submit" class="btn btn-primary w-100">
                 <i class="bi bi-filter"></i> Apply Filters
             </button>
         </div>
     </div>
+
+
 </form>
 
 <!-- Toggle View Buttons -->
@@ -48,151 +53,61 @@
 </div>
 
 <!-- Create New Task Button -->
-<div class="mb-3">
-    @if (Model != null && Model.Any())
-    {
-        <!-- Show the Create New Task button only if there are tasks -->
-        <a href="@Url.Action("Create", "ToDo")" class="btn btn-lg btn-primary">
-            <i class="bi bi-plus-circle"></i> Create New Task
-        </a>
-    }
+<div class="mb-3 text-center">
+    <!-- Added text-center class for better alignment -->
+    <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary w-auto" style="padding: 10px 15px;">
+        <i class="bi bi-plus-circle me-2"></i>
+        <span>
+            @if (Model != null && Model.Any())
+            {
+                <span>Create New Task</span>
+            }
+            else
+            {
+                <span>Create First Task</span>
+            }
+        </span>
+    </a>
 </div>
-
 
 
 <!-- Kanban View -->
 <div id="kanbanView" style="display:block;">
     <h2>@ViewData["Title"]</h2>
     <div class="row">
-        <!-- Column for "Pending" -->
-        <div class="col-md-3 col-6">
-            <div class="kanban-column">
-                <h5>Pending</h5>
-                <div class="kanban-tasks">
-                    @foreach (var item in Model.Where(t => t.Status.ToString() == "Pending"))
-                    {
-                        <div class="card shadow-lg mb-4" style="cursor: pointer;">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text">@((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" : item.Details.Length > 80 ? item.Details.Substring(0, 80) + "..." : item.Details))</p>
-                                <div class="d-flex justify-content-between">
-                                    <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">Edit</a>
-                                    <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Column for "In Progress" -->
-        <div class="col-md-3 col-6">
-            <div class="kanban-column">
-                <h5>In Progress</h5>
-                <div class="kanban-tasks">
-                    @foreach (var item in Model.Where(t => t.Status.ToString() == "InProgress"))
-                    {
-                        <div class="card shadow-lg mb-4" style="cursor: pointer;">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text">@((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" : item.Details.Length > 80 ? item.Details.Substring(0, 80) + "..." : item.Details))</p>
-                                <div class="d-flex justify-content-between">
-                                    <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">Edit</a>
-                                    <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Column for "On Hold" -->
-        <div class="col-md-3 col-6">
-            <div class="kanban-column">
-                <h5>On Hold</h5>
-                <div class="kanban-tasks">
-                    @foreach (var item in Model.Where(t => t.Status.ToString() == "OnHold"))
-                    {
-                        <div class="card shadow-lg mb-4" style="cursor: pointer;">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text">@((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" : item.Details.Length > 80 ? item.Details.Substring(0, 80) + "..." : item.Details))</p>
-                                <div class="d-flex justify-content-between">
-                                    <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">Edit</a>
-                                    <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Column for "Completed" -->
-        <div class="col-md-3 col-6">
-            <div class="kanban-column">
-                <h5>Completed</h5>
-                <div class="kanban-tasks">
-                    @foreach (var item in Model.Where(t => t.Status.ToString() == "Completed"))
-                    {
-                        <div class="card shadow-lg mb-4" style="cursor: pointer;">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text">@((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" : item.Details.Length > 80 ? item.Details.Substring(0, 80) + "..." : item.Details))</p>
-                                <div class="d-flex justify-content-between">
-                                    <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">Edit</a>
-                                    <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Floating View -->
-<div id="floatingView" style="display:none;">
-    <h2>Floating View</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model)
+        @foreach (var status in new[] { "Pending", "InProgress", "OnHold", "Completed" })
         {
-            <div class="col">
-                <div class="card shadow-lg border-0 rounded mb-4">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fs-5 fw-bold text-dark mb-2">@item.Title</h5>
-                        <span class="badge rounded-pill @ToDoHelpers.GetStatusClass(item.Status).BadgeClass mb-3">
-                            <i class=" @ToDoHelpers.GetStatusClass(item.Status).IconClass"></i> @ToDoHelpers.GetStatusDisplayName(item.Status)
-                        </span>
-                        <p class="text-muted mb-4" data-bs-toggle="tooltip" title="@item.Details">
-                            @((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" :
-                                item.Details.Length > 100 ? item.Details.Substring(0, 100) + "..." : item.Details))
-                        </p>
-
-                        <!-- Edit and Delete Buttons -->
-                        <div class="d-flex justify-content-between mt-3">
-                            <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm shadow-sm" aria-label="Edit Task" title="Edit Task">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm shadow-sm" aria-label="Delete Task" title="Delete Task">
-                                <i class="fas fa-trash"></i> Delete
-                            </a>
-                        </div>
-                    </div>
+            <div class="col-md-3 col-6">
+                <div class="kanban-column">
+                    <h5>@status</h5>
+                    <div class="kanban-tasks">
+                        @if (!Model.Any(t => t.Status.ToString() == status))
+                        {
+                            <p>No tasks in this category.</p>
+                        }
+                        @Html.Partial("_TaskList", Model.Where(t => t.Status.ToString() == status))
+                    </div>          
                 </div>
             </div>
         }
     </div>
 </div>
 
+<!-- Floating View -->
+<div id="floatingView" style="display:none;">
+    <h2>Floating View</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @if (Model.Count == 0)
+        {
+            <p>No tasks available. Click the button below to create a task.</p>
+        }
+        @Html.Partial("_TaskList", Model)
+    </div>
+</div>
+
 <!-- JavaScript for View Toggling -->
 @section Scripts {
     <script>
-        // Constants for view types and DOM elements
         const VIEW_TYPES = {
             KANBAN: 'kanban',
             FLOATING: 'floating'
@@ -209,38 +124,25 @@
 
         function toggleView(isKanban) {
             const activeView = isKanban ? VIEW_TYPES.KANBAN : VIEW_TYPES.FLOATING;
-
-            // Update view visibility
             DOM_ELEMENTS.kanbanView.style.display = isKanban ? 'block' : 'none';
             DOM_ELEMENTS.floatingView.style.display = isKanban ? 'none' : 'block';
-
-            // Update button styles
             updateButtonStyles(isKanban);
-
-            // Save user preference
             localStorage.setItem(STORAGE_KEY, activeView);
         }
 
         function updateButtonStyles(isKanban) {
-            // Toggle classes more explicitly
             DOM_ELEMENTS.kanbanViewBtn.classList.toggle('btn-primary', isKanban);
             DOM_ELEMENTS.kanbanViewBtn.classList.toggle('btn-outline-primary', !isKanban);
-
             DOM_ELEMENTS.floatingViewBtn.classList.toggle('btn-primary', !isKanban);
             DOM_ELEMENTS.floatingViewBtn.classList.toggle('btn-outline-secondary', isKanban);
         }
 
-        // Initialize view on page load
         function initializeView() {
             const savedView = localStorage.getItem(STORAGE_KEY);
-            // Default to Kanban view if no preference is saved
             toggleView(savedView !== VIEW_TYPES.FLOATING);
         }
 
-        // Add event listener when DOM is fully loaded
         document.addEventListener('DOMContentLoaded', initializeView);
-
-        // Expose toggleView to global scope if needed for button onclick
         window.toggleView = toggleView;
     </script>
 }
