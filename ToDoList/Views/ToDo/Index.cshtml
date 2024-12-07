@@ -7,93 +7,101 @@
 
 <style>
     /* Add custom styles if needed */
+    body {
+        padding: 20px;
+    }
+
+    .kanban-column {
+        margin-bottom: 20px;
+    }
 </style>
 
-<!-- Search and Filter Form -->
-<form method="get" class="mb-4">
-    <div class="row g-4 align-items-center">
-        <div class="col-md-5">
-            <div class="input-group">
-                <span class="input-group-text bg-light border-end-0">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" name="searchQuery"
-                       class="form-control border-start-0"
-                       placeholder="Search tasks by title or details"
-                       value="@ViewData["SearchQuery"]"
-                       aria-label="Search tasks" />
+
+
+<div class="container">
+    <!--- Search and Filter Form --->
+    <form method="get" class="mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="searchQuery"
+                           class="form-control border-start-0"
+                           placeholder="Search tasks by title or details"
+                           value="@ViewData["SearchQuery"]"
+                           aria-label="Search tasks" />
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="statusFilter" class="form-label visually-hidden">Status Filter</label>
+                <select id="statusFilter" name="statusFilter" class="form-select">
+                    <option value="">All Tasks</option>
+                    <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>
+                    <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>
+                    <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>
+                    <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter"></i> Apply Filters
+                </button>
             </div>
         </div>
+    </form>
 
-        <div class="col-md-4">
-            <label for="statusFilter" class="form-label visually-hidden">Status Filter</label>
-            <select id="statusFilter" name="statusFilter" class="form-select">
-                <option value="">All Tasks</option>
-                <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>
-                <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>
-                <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>
-                <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>
-            </select>
-        </div>
+    <!--- Toggle View Buttons --->
+    <div class="d-flex justify-content-between mb-3">
+        <!--- Create New Task Button --->
+        <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary w-auto" style="padding: 10px 15px;">
+            <i class="bi bi-plus-circle me-2"></i>
+            <span>
+                @if (Model != null && Model.Any())
+                {
+                    <span>Create New Task</span>
+                }
+                else
+                {
+                    <span>Create First Task</span>
+                }
+            </span>
+        </a>
 
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-primary w-100">
-                <i class="bi bi-filter"></i> Apply Filters
-            </button>
+        <!--- Toggle View Buttons --->
+        <div>
+            <button id="kanbanViewBtn" class="btn btn-outline-primary me-2" onclick="toggleView(true)">Kanban View</button>
+            <button id="floatingViewBtn" class="btn btn-outline-secondary" onclick="toggleView(false)">Floating View</button>
         </div>
     </div>
-
-
-</form>
-
-<!-- Toggle View Buttons -->
-<div class="mb-3">
-    <button id="kanbanViewBtn" class="btn btn-outline-primary" onclick="toggleView(true)">Kanban View</button>
-    <button id="floatingViewBtn" class="btn btn-outline-secondary" onclick="toggleView(false)">Floating View</button>
-</div>
-
-<!-- Create New Task Button -->
-<div class="mb-3 text-center">
-    <!-- Added text-center class for better alignment -->
-    <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary w-auto" style="padding: 10px 15px;">
-        <i class="bi bi-plus-circle me-2"></i>
-        <span>
-            @if (Model != null && Model.Any())
-            {
-                <span>Create New Task</span>
-            }
-            else
-            {
-                <span>Create First Task</span>
-            }
-        </span>
-    </a>
 </div>
 
 
-<!-- Kanban View -->
+
+<!--- Kanban View --->
 <div id="kanbanView" style="display:block;">
     <h2>@ViewData["Title"]</h2>
     <div class="row">
-        @foreach (var status in new[] { "Pending", "InProgress", "OnHold", "Completed" })
+        @foreach (var status in Enum.GetValues(typeof(ToDoList.Models.TaskStatus)).Cast<ToDoList.Models.TaskStatus>())
         {
-            <div class="col-md-3 col-6">
+            <div class="col-12 col-sm-6 col-md-3">
                 <div class="kanban-column">
-                    <h5>@status</h5>
+                    <h5>@ToDoHelpers.GetStatusDisplayName(status)</h5>
                     <div class="kanban-tasks">
-                        @if (!Model.Any(t => t.Status.ToString() == status))
+                        @if (!Model.Any(t => t.Status == status))
                         {
                             <p>No tasks in this category.</p>
                         }
-                        @Html.Partial("_TaskList", Model.Where(t => t.Status.ToString() == status))
-                    </div>          
+                        @Html.Partial("_TaskList", Model.Where(t => t.Status == status))
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
 
-<!-- Floating View -->
+<!--- Floating View --->
 <div id="floatingView" style="display:none;">
     <h2>Floating View</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -105,7 +113,7 @@
     </div>
 </div>
 
-<!-- JavaScript for View Toggling -->
+<!--- JavaScript for View Toggling --->
 @section Scripts {
     <script>
         const VIEW_TYPES = {

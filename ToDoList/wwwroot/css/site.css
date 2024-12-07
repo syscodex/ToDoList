@@ -24,8 +24,11 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif; /* Clean sans-serif font */
+    background: linear-gradient(180deg, #ffffff, #f9f9f9);
 }
+
+
 
 .btn-primary {
     background-color: #0056b3;
@@ -41,22 +44,60 @@ body {
 
 
 /*Landing page*/
+#landing-welcome-section {
+    color: white;
+}
 
-.card-title {
-    font-size: 1.2rem;
+/* Landing Page Title */
+.landing-title {
+    font-size: 2.5rem;
     font-weight: bold;
 }
 
-/* Custom Styles for the Cards in the Landing Page */
-.landing-card-body {
-    padding: 1.5rem;
-    background-color: #fff; /* Optional: set a specific background color for the card body */
+/* Landing Page Subtitle */
+.landing-subtitle {
+    font-size: 1.25rem;
+    color: #dcdcdc;
 }
 
-/* Optional: Customize hover effect for these specific cards */
-.custom-card:hover .landing-card-body {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+/* Landing Button */
+.landing-btn {
+    font-size: 1rem;
+    font-weight: 600;
 }
+
+/* Manage Tasks Section */
+#landing-manage-tasks-section {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Landing Cards */
+.landing-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+}
+
+    .landing-card:hover {
+        transform: scale(1.05);
+    }
+
+.landing-card-body {
+    padding: 20px;
+}
+
+.landing-card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.landing-card-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+
 
 /**************************************************************************************************************************/
 
@@ -121,21 +162,6 @@ body {
 
 /*Index.cshtml*/
 
-/* Hover Effect on Cards */
-/* Scoped styling for text-muted inside #toDoListPage */
-#toDoListPage .text-muted {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
 
 .card-container {
     display: grid;
@@ -151,19 +177,104 @@ body {
     font-size: 1.25rem;
 }
 
-
-
-/* Limit the task details section and prevent overflow */
-.card-body {
-    transition: padding 0.3s ease;
+/* Styles specific to the card with the custom-card class _TaskList.cshtml */
+.custom-card {
+    border-radius: 12px; /* Rounded corners */
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+    .custom-card:hover {
+        transform: scale(1.02); /* Slight zoom effect on hover */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+    }
 
-/* Expandable text on hover or click (when details are available) */
-.card-body p.expandable:hover {
-        max-height: none; /* Allow full text to be visible when hovered */
-        -webkit-line-clamp: unset; /* Remove the line clamp */
-}
+    .custom-card .card-body {
+        padding: 20px;
+        background-color: #f8f9fa; /* Light gray background for cards */
+    }
+
+    .custom-card .card-title {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .custom-card .card-text {
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    /* Customizing the badge within the card */
+    .custom-card .badge {
+        font-size: 0.9em;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .custom-card .badge i {
+            margin-right: 6px;
+        }
+
+    /* Example status badge colors */
+    .custom-card .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .custom-card .badge-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .custom-card .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Customizing the user info section */
+    .custom-card .fa-user-circle {
+        font-size: 1.5rem;
+        color: #007bff; /* Blue color for icons */
+    }
+
+    .custom-card .text-muted {
+        font-size: 1rem;
+        color: #6c757d; /* Light gray text */
+    }
+
+    .custom-card .fa-calendar-alt,
+    .custom-card .fa-check-circle {
+        font-size: 1.2rem;
+        color: #6c757d;
+    }
+
+    /* Date info */
+    .custom-card .d-flex small {
+        font-size: 0.85em;
+        color: #6c757d;
+    }
+
+    .custom-card .d-flex time {
+        font-size: 1em;
+        color: #495057; /* Darker color for dates */
+    }
+
+    /* Floating view customization */
+    .custom-card .floating .fa-clock {
+        font-size: 1rem;
+        color: #007bff;
+    }
+
+    .custom-card .floating small {
+        font-size: 0.9em;
+        color: #007bff;
+    }
+
+
 
 
 /* Optional: Make sure collapsible section does not cause overflow */
@@ -180,52 +291,6 @@ main {
 /* Optional: Add some padding to the footer to avoid card collision */
 .footer-space {
     padding-bottom: 40px;
-}
-
-
-/*NO task available*/
-
-.empty-state {
-    background-color: #f0f8ff; /* Light blue background */
-    color: #555; /* Darker text for contrast */
-    padding: 20px;
-    border-radius: 8px;
-    animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-.empty-state i {
-    font-size: 40px;
-    color: #5bc0de;
-}
-
-.empty-state p {
-    font-size: 1.2em;
-    margin: 15px 0;
-}
-
-.empty-state .btn {
-    margin-top: 10px;
-}
-
-@media (max-width: 576px) {
-    .btn-lg {
-        font-size: 16px; /* Adjust button text size */
-        padding: 1rem 1.5rem; /* Adjust button padding */
-    }
-
-    .empty-state p {
-        font-size: 1.2rem; /* Adjust the paragraph font size for readability */
-    }
 }
 
 
