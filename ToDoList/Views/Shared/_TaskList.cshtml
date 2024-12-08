@@ -67,9 +67,11 @@
                 <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-edit"></i> Edit
                 </a>
-                <a href="@Url.Action("Delete", "ToDo", new { id = item.Id })" class="btn btn-outline-danger btn-sm">
+                @Html.AntiForgeryToken() <!-- Generates the token -->
+
+                <button class="delete-btn btn btn-outline-danger btn-sm" data-id="@item.Id">
                     <i class="fas fa-trash-alt"></i> Delete
-                </a>
+                </button>
             </div>
         </div>
     </div>

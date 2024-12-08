@@ -81,12 +81,16 @@ namespace ToDoList.Controllers
                 _context.Add(todoItem);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Created a new ToDoItem with Title: {Title}", todoItem.Title);
-                return RedirectToAction(nameof(Index));
+
+                // Return a success message as JSON
+                return Json(new { success = true, message = "Task created successfully!" });
             }
 
-            _logger.LogWarning("Failed to create ToDoItem. Validation errors: {Errors}", string.Join(", ", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))));
-            return View(todoItem);
+            // If validation fails, return an error message
+            var errors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)));
+            return Json(new { success = false, message = errors });
         }
+
 
         // **EDIT**: Display the edit form for a specific item (GET)
         public async Task<IActionResult> Edit(int? id)
@@ -107,7 +111,6 @@ namespace ToDoList.Controllers
             return View(todoItem);
         }
 
-        // **EDIT**: Handle the form submission for updating an item (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Details,AssignedTo,DateStarted,DateOfCompletion,Status")] ToDoItem todoItem)
@@ -115,7 +118,7 @@ namespace ToDoList.Controllers
             if (id != todoItem.Id)
             {
                 _logger.LogWarning("Edit action received mismatched ID: Expected {ExpectedId}, Found {FoundId}", id, todoItem.Id);
-                return NotFound();
+                return Json(new { success = false, message = "Task not found." });
             }
 
             if (ModelState.IsValid)
@@ -125,61 +128,59 @@ namespace ToDoList.Controllers
                     _context.Update(todoItem);
                     await _context.SaveChangesAsync();
                     _logger.LogInformation("Updated ToDoItem with ID {Id} and Title: {Title}", todoItem.Id, todoItem.Title);
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { success = true, message = "Task updated successfully!" });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ToDoItemExists(todoItem.Id))
                     {
                         _logger.LogWarning("ToDoItem with ID {Id} not found during update.", todoItem.Id);
-                        return NotFound();
+                        return Json(new { success = false, message = "Task not found." });
                     }
 
                     _logger.LogError("Error occurred during updating ToDoItem with ID {Id}.", todoItem.Id);
-                    throw;
+                    return Json(new { success = false, message = "An error occurred during the update." });
                 }
             }
 
-            return View(todoItem); // Return to form with validation errors
+            // If model validation fails, return error message
+            return Json(new { success = false, message = "Invalid form data. Please check your input." });
         }
 
-        // **DELETE**: Confirm deletion for a specific item (GET)
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                _logger.LogWarning("Delete action received null id.");
-                return NotFound();
-            }
 
-            var todoItem = await _context.ToDoItems.FirstOrDefaultAsync(m => m.Id == id);
-            if (todoItem == null)
-            {
-                _logger.LogWarning("ToDoItem with ID {Id} not found during Delete action.", id);
-                return NotFound();
-            }
 
-            return View(todoItem);
-        }
 
-        // **DELETE**: Handle deletion confirmation (POST)
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            _logger.LogInformation($"Received delete request for ID: {id}");
+
+            if (id == 0)
+            {
+                _logger.LogWarning("Received invalid or zero ID");
+                return Json(new { success = false, message = "Invalid task ID" });
+            }
+
             var todoItem = await _context.ToDoItems.FindAsync(id);
-            if (todoItem != null)
+            if (todoItem == null)
+            {
+                _logger.LogWarning("Attempted to delete non-existent ToDoItem with ID {Id}.", id);
+                return Json(new { success = false, message = "The task you tried to delete does not exist." });
+            }
+
+            try
             {
                 _context.ToDoItems.Remove(todoItem);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Deleted ToDoItem with ID {Id} and Title: {Title}", id, todoItem.Title);
+                return Json(new { success = true, message = "Task deleted successfully!" });
             }
-            else
+            catch (DbUpdateException ex)
             {
-                _logger.LogWarning("Attempted to delete non-existent ToDoItem with ID {Id}.", id);
+                _logger.LogError(ex, "Error occurred while deleting the ToDoItem with ID {Id}.", id);
+                return Json(new { success = false, message = "An error occurred while deleting the task." });
             }
-
-            return RedirectToAction(nameof(Index)); // Redirect after deletion
         }
 
         // **Helper Method**: Check if an item exists by ID
