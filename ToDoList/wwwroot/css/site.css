@@ -184,9 +184,13 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.custom-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition */
+}
+
     .custom-card:hover {
-        transform: scale(1.02); /* Slight zoom effect on hover */
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+        transform: scale(1.015); /* Slight zoom effect with reduced scale */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle, less intense shadow */
     }
 
     .custom-card .card-body {
@@ -305,3 +309,68 @@ main {
     }
 
 
+/*Search result*/
+/* Search Filter Container Styles */
+.search-filter-container {
+    background-color: #ffffff; /* White background for contrast */
+    border: 1px solid #dee2e6; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Inner padding */
+    margin-bottom: 20px; /* Space below the card */
+}
+
+    /* General Styles Inside Search Filter Container */
+    .search-filter-container .input-group .form-control {
+        border-radius: 4px 0 0 4px; /* Rounded corners for the input */
+    }
+
+    .search-filter-container .input-group .input-group-text {
+        border-radius: 4px 0 0 4px; /* Matching rounded corners for the input group */
+    }
+
+    .search-filter-container .btn-outline-primary {
+        border-radius: 0 4px 4px 0; /* Rounded corners for button */
+    }
+
+    .search-filter-container .search-results {
+        margin-top: 5px; /* Space above messages */
+        padding: 10px; /* Padding inside the message box */
+        border: 1px solid #cce5ff; /* Light blue border */
+        background-color: #e7f3ff; /* Light blue background */
+        border-radius: 4px; /* Rounded corners */
+    }
+
+    /* Button Padding */
+    .search-filter-container .btn-primary {
+        padding: 8px 12px; /* Adjusted padding for buttons */
+    }
+
+    .search-filter-container .btn-outline-primary,
+    .search-filter-container .btn-outline-secondary {
+        padding: 8px 12px; /* Adjusted padding for toggle buttons */
+    }
+
+/* Media Queries for Responsive Design */
+@media (max-width: 767px) {
+    .search-filter-container .input-group {
+        flex-direction: column; /* Stack input and button on small screens */
+    }
+
+        .search-filter-container .input-group .btn {
+            width: 100%; /* Full-width button on small screens */
+            margin-top: 5px; /* Space between stacked items */
+        }
+
+    .search-filter-container .col-md-2,
+    .search-filter-container .col-md-3,
+    .search-filter-container .col-md-7 {
+        flex: 0 0 auto; /* Allow column sizes to adjust more freely */
+        width: 100%; /* Full width on mobile */
+    }
+
+    .search-filter-container .col-8,
+    .search-filter-container .col-4 {
+        flex: 0 0 auto; /* Allow column sizes to adjust more freely */
+    }
+}  

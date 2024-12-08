@@ -18,64 +18,90 @@
 
 
 
-<div class="container">
-    <!--- Search and Filter Form --->
-    <form method="get" class="mb-4">
-        <div class="row g-3 align-items-center">
-            <div class="col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" name="searchQuery"
-                           class="form-control border-start-0"
-                           placeholder="Search tasks by title or details"
-                           value="@ViewData["SearchQuery"]"
-                           aria-label="Search tasks" />
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <label for="statusFilter" class="form-label visually-hidden">Status Filter</label>
-                <select id="statusFilter" name="statusFilter" class="form-select">
-                    <option value="">All Tasks</option>
-                    <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>
-                    <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>
-                    <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>
-                    <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>
-                </select>
-            </div>
-            <div class="col-md-3 d-grid">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-filter"></i> Apply Filters
-                </button>
-            </div>
-        </div>
-    </form>
+<!-- Search and Filter Form Container -->  
+<div class="container mb-4 search-filter-container">  <!-- Unique class name added -->  
+    <form method="get" class="form-container">  <!-- Keep this if you plan to style the form independently -->  
+        <div class="row g-2 align-items-center">  
+            <!-- Search Bar Section -->  
+            <div class="col-8 col-md-7">  
+                <div class="input-group">  
+                    <span class="input-group-text bg-light border-end-0">  
+                        <i class="bi bi-search"></i>  
+                    </span>  
+                    <input type="text" name="searchQuery"  
+                           class="form-control border-start-0"  
+                           placeholder="Search tasks by title or details"  
+                           value="@ViewData["SearchQuery"]"  
+                           aria-label="Search tasks" />  
+                    <button type="submit" class="btn btn-outline-primary">  
+                        <i class="bi bi-search"></i>  
+                    </button>  
+                </div>  
 
-    <!--- Toggle View Buttons --->
-    <div class="d-flex justify-content-between mb-3">
-        <!--- Create New Task Button --->
-        <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary w-auto" style="padding: 10px 15px;">
-            <i class="bi bi-plus-circle me-2"></i>
-            <span>
-                @if (Model != null && Model.Any())
-                {
-                    <span>Create New Task</span>
-                }
-                else
-                {
-                    <span>Create First Task</span>
-                }
-            </span>
-        </a>
+                <!-- Search Result Message -->  
+                @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()))  
+                {  
+                    <div class="search-results mt-1 small fw-light">  
+                        @if (!Model.Any())   
+                        {  
+                            <span>No recent items match your search.</span>  
+                            <a href="@Url.Action("Index", "ToDo")" class="link-primary">Search older items</a>  
+                        }  
+                        else   
+                        {  
+                            <span>All search results for "@ViewData["SearchQuery"]"</span>  
+                        }  
+                    </div>  
+                }  
+            </div>  
 
-        <!--- Toggle View Buttons --->
-        <div>
-            <button id="kanbanViewBtn" class="btn btn-outline-primary me-2" onclick="toggleView(true)">Kanban View</button>
-            <button id="floatingViewBtn" class="btn btn-outline-secondary" onclick="toggleView(false)">Floating View</button>
-        </div>
-    </div>
-</div>
+            <!-- Status Filter Section -->  
+            <div class="col-4 col-md-3">  
+                <select id="statusFilter" name="statusFilter" class="form-select">  
+                    <option value="">All Tasks</option>  
+                    <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>  
+                    <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>  
+                    <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>  
+                    <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>  
+                </select>  
+            </div>  
+
+            <!-- Apply Filters Button -->  
+            <div class="col-12 col-md-2 d-grid">  
+                <button type="submit" class="btn btn-primary">  
+                    <i class="bi bi-filter"></i> Apply  
+                </button>  
+            </div>  
+        </div>  
+    </form>  
+</div>  
+
+<!-- Toggle View and Task Creation Section -->  
+<div class="container mb-3">  
+    <div class="d-flex justify-content-between align-items-center">  
+        <!-- Create New Task Button -->  
+        <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary">  
+            <i class="bi bi-plus-circle me-2"></i>  
+            <span>  
+                @if (Model != null && Model.Any())  
+                {  
+                    <span>Create New Task</span>  
+                }  
+                else  
+                {  
+                    <span>Create First Task</span>  
+                }  
+            </span>  
+        </a>  
+
+        <!-- Toggle View Buttons -->  
+        <div>  
+            <button id="kanbanViewBtn" class="btn btn-outline-primary me-2" onclick="toggleView(true)">Kanban View</button>  
+            <button id="floatingViewBtn" class="btn btn-outline-secondary" onclick="toggleView(false)">Floating View</button>  
+        </div>  
+    </div>  
+</div>    
+
 
 
 
@@ -113,8 +139,12 @@
     </div>
 </div>
 
+
 <!--- JavaScript for View Toggling --->
 @section Scripts {
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.js"></script>
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         const VIEW_TYPES = {
             KANBAN: 'kanban',
@@ -154,3 +184,4 @@
         window.toggleView = toggleView;
     </script>
 }
+

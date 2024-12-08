@@ -23,7 +23,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
+app.UseHttpsRedirection(); 
 app.UseStaticFiles();
 
 app.UseRouting();

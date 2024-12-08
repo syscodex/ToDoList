@@ -71,6 +71,7 @@ namespace ToDoList.Models
         [StringLength(100, MinimumLength = 2, ErrorMessage = "Assigned to must be between 2 and 100 characters.")]
         public required string AssignedTo { get; set; }
 
+
         /// <summary>
         /// Current status of the task.
         /// </summary>
