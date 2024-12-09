@@ -1,34 +1,45 @@
 * {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-    font-family: 'Roboto', sans-serif; /* Clean sans-serif font */
-    background: linear-gradient(180deg, #ffffff, #f9f9f9);
+    font-family: 'Inter', sans-serif; /* Default font for body */
+    background: linear-gradient(180deg, #ffffff, #f9f9f9); /* Light background */
+    color: #333; /* Dark text color for readability */
+    line-height: 1.6; /* Improved line-height for readability */
 }
 
 
+
+.footer-space {
+    padding-bottom: 40px;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
 
 .btn-primary {
     background-color: #0056b3;
@@ -77,6 +88,7 @@ body {
     background-color: #ffffff;
     border-radius: 8px;
     transition: transform 0.2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
 }
 
     .landing-card:hover {
@@ -158,10 +170,9 @@ body {
     color: white;
 }
 
-/**************************************************************************************************************************/
+
 
 /*Index.cshtml*/
-
 
 .card-container {
     display: grid;
@@ -278,7 +289,27 @@ body {
         color: #007bff;
     }
 
+/* Kanban status text */
+.center-container {
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    align-items: center;
+    height: 100%;
+   
+}
 
+
+h3 {
+    font-size: 1.25rem; /* Smaller size for a clean look */
+    font-weight: 300; /* Lighter font weight */
+    margin-top: 20px;
+    letter-spacing: 0.5px; /* Subtle letter spacing */
+}
+
+.kanban-tasks {
+    font-size: 1rem;
+}
 
 
 /* Optional: Make sure collapsible section does not cause overflow */
@@ -286,17 +317,6 @@ body {
     max-height: 300px; /* You can adjust this to control how much content is shown */
     overflow-y: auto;
 }
-
-/* Adjust layout and prevent footer overlap */
-main {
-    overflow: hidden; /* Prevents any overflowing content affecting layout */
-}
-
-/* Optional: Add some padding to the footer to avoid card collision */
-.footer-space {
-    padding-bottom: 40px;
-}
-
 
 /* Collapsible Section */
 .collapse-content {
@@ -309,68 +329,87 @@ main {
     }
 
 
-/*Search result*/
-/* Search Filter Container Styles */
+/* Search result styles */
 .search-filter-container {
-    background-color: #ffffff; /* White background for contrast */
-    border: 1px solid #dee2e6; /* Light border */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    padding: 20px; /* Inner padding */
-    margin-bottom: 20px; /* Space below the card */
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-    /* General Styles Inside Search Filter Container */
     .search-filter-container .input-group .form-control {
-        border-radius: 4px 0 0 4px; /* Rounded corners for the input */
+        border-radius: 4px 0 0 4px;
     }
 
     .search-filter-container .input-group .input-group-text {
-        border-radius: 4px 0 0 4px; /* Matching rounded corners for the input group */
+        border-radius: 4px 0 0 4px;
     }
 
     .search-filter-container .btn-outline-primary {
-        border-radius: 0 4px 4px 0; /* Rounded corners for button */
+        border-radius: 0 4px 4px 0;
     }
 
     .search-filter-container .search-results {
-        margin-top: 5px; /* Space above messages */
-        padding: 10px; /* Padding inside the message box */
-        border: 1px solid #cce5ff; /* Light blue border */
-        background-color: #e7f3ff; /* Light blue background */
-        border-radius: 4px; /* Rounded corners */
+        margin-top: 5px;
+        padding: 10px;
+        border: 1px solid #cce5ff;
+        background-color: #e7f3ff;
+        border-radius: 4px;
     }
 
-    /* Button Padding */
     .search-filter-container .btn-primary {
-        padding: 8px 12px; /* Adjusted padding for buttons */
+        padding: 8px 12px;
     }
 
     .search-filter-container .btn-outline-primary,
     .search-filter-container .btn-outline-secondary {
-        padding: 8px 12px; /* Adjusted padding for toggle buttons */
+        padding: 8px 12px;
     }
 
-/* Media Queries for Responsive Design */
+search-filter-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+    padding: 20px;
+}
+
+.search-results {
+    margin-top: 8px;
+}
+
+    .search-results a {
+        text-decoration: none;
+    }
+.search-results {
+    margin: 0;
+}
+
+
+/* Media Queries */
 @media (max-width: 767px) {
     .search-filter-container .input-group {
-        flex-direction: column; /* Stack input and button on small screens */
+        flex-direction: column;
     }
 
         .search-filter-container .input-group .btn {
-            width: 100%; /* Full-width button on small screens */
-            margin-top: 5px; /* Space between stacked items */
+            width: 100%;
+            margin-top: 5px;
         }
 
     .search-filter-container .col-md-2,
     .search-filter-container .col-md-3,
     .search-filter-container .col-md-7 {
-        flex: 0 0 auto; /* Allow column sizes to adjust more freely */
-        width: 100%; /* Full width on mobile */
+        flex: 0 0 auto;
+        width: 100%;
     }
 
     .search-filter-container .col-8,
     .search-filter-container .col-4 {
-        flex: 0 0 auto; /* Allow column sizes to adjust more freely */
+        flex: 0 0 auto;
     }
-}  
+}

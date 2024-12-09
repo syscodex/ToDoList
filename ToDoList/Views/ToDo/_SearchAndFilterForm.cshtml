@@ -1,0 +1,68 @@
+﻿@model List<ToDoList.Models.ToDoItem>
+@using ToDoList.Helpers
+@{
+    var searchQuery = ViewData["SearchQuery"]?.ToString();
+}
+
+@* Search and Filter Form Partial View *@
+<!-- Search and Filter Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="form-container">
+            <div class="row g-2 align-items-center">
+                <!-- Search Bar Section -->
+                <div class="col-8 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="searchQuery"
+                               class="form-control border-start-0"
+                               placeholder="Search tasks by title or details"
+                               value="@ViewData["SearchQuery"]"
+                               aria-label="Search tasks" />
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search Result Message -->
+                    @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()))
+                    {
+                        <div class="search-results mt-1 small fw-light">
+                            @if (!Model.Any())
+                            {
+                                <span>No recent items match your search.</span>
+                                <a href="@Url.Action("Index", "ToDo")" class="link-primary">Search older items</a>
+                            }
+                            else
+                            {
+                                <span>All search results for "@ViewData["SearchQuery"]"</span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Status Filter Section -->
+                <div class="col-4 col-md-3">
+                    <select id="statusFilter" name="statusFilter" class="form-select">
+                        <option value="">All Tasks</option>
+                        <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>
+                        <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>
+                        <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>
+                        <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>
+                    </select>
+                </div>
+
+                <!-- Apply Filters Button -->
+                <div class="col-12 col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-filter"></i> Apply
+                    </button>
+                </div>
+
+                
+            </div>
+        </form>
+    </div>
+</div>

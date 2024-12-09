@@ -12,97 +12,41 @@
     }
 
     .kanban-column {
-        margin-bottom: 20px;
+        margin-bottom: 50px;
     }
 </style>
 
 
-
 <!-- Search and Filter Form Container -->  
-<div class="container mb-4 search-filter-container">  <!-- Unique class name added -->  
-    <form method="get" class="form-container">  <!-- Keep this if you plan to style the form independently -->  
-        <div class="row g-2 align-items-center">  
-            <!-- Search Bar Section -->  
-            <div class="col-8 col-md-7">  
-                <div class="input-group">  
-                    <span class="input-group-text bg-light border-end-0">  
-                        <i class="bi bi-search"></i>  
-                    </span>  
-                    <input type="text" name="searchQuery"  
-                           class="form-control border-start-0"  
-                           placeholder="Search tasks by title or details"  
-                           value="@ViewData["SearchQuery"]"  
-                           aria-label="Search tasks" />  
-                    <button type="submit" class="btn btn-outline-primary">  
-                        <i class="bi bi-search"></i>  
-                    </button>  
-                </div>  
-
-                <!-- Search Result Message -->  
-                @if (!string.IsNullOrEmpty(ViewData["SearchQuery"]?.ToString()))  
-                {  
-                    <div class="search-results mt-1 small fw-light">  
-                        @if (!Model.Any())   
-                        {  
-                            <span>No recent items match your search.</span>  
-                            <a href="@Url.Action("Index", "ToDo")" class="link-primary">Search older items</a>  
-                        }  
-                        else   
-                        {  
-                            <span>All search results for "@ViewData["SearchQuery"]"</span>  
-                        }  
-                    </div>  
-                }  
-            </div>  
-
-            <!-- Status Filter Section -->  
-            <div class="col-4 col-md-3">  
-                <select id="statusFilter" name="statusFilter" class="form-select">  
-                    <option value="">All Tasks</option>  
-                    <option value="Pending" selected="@(ViewData["StatusFilter"]?.ToString() == "Pending")">Pending</option>  
-                    <option value="InProgress" selected="@(ViewData["StatusFilter"]?.ToString() == "InProgress")">In Progress</option>  
-                    <option value="Completed" selected="@(ViewData["StatusFilter"]?.ToString() == "Completed")">Completed</option>  
-                    <option value="OnHold" selected="@(ViewData["StatusFilter"]?.ToString() == "OnHold")">On Hold</option>  
-                </select>  
-            </div>  
-
-            <!-- Apply Filters Button -->  
-            <div class="col-12 col-md-2 d-grid">  
-                <button type="submit" class="btn btn-primary">  
-                    <i class="bi bi-filter"></i> Apply  
-                </button>  
-            </div>  
-        </div>  
-    </form>  
-</div>  
-
-<!-- Toggle View and Task Creation Section -->  
-<div class="container mb-3">  
-    <div class="d-flex justify-content-between align-items-center">  
-        <!-- Create New Task Button -->  
-        <a href="@Url.Action("Create", "ToDo")" class="btn btn-primary">  
-            <i class="bi bi-plus-circle me-2"></i>  
-            <span>  
-                @if (Model != null && Model.Any())  
-                {  
-                    <span>Create New Task</span>  
-                }  
-                else  
-                {  
-                    <span>Create First Task</span>  
-                }  
-            </span>  
-        </a>  
-
-        <!-- Toggle View Buttons -->  
-        <div>  
-            <button id="kanbanViewBtn" class="btn btn-outline-primary me-2" onclick="toggleView(true)">Kanban View</button>  
-            <button id="floatingViewBtn" class="btn btn-outline-secondary" onclick="toggleView(false)">Floating View</button>  
-        </div>  
-    </div>  
-</div>    
+<div>@Html.Partial("_SearchAndFilterForm")</div>
+   
 
 
+<!-- Toggle View and Task Creation Section -->
+<div class="container mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Create New Task Button -->
+        <a href="@Url.Action("Create", "ToDo")" class="btn btn-sm btn-primary">
+            <i class="bi bi-plus-circle me-1 fs-4"></i>  <!-- Adjusted font size for better visibility -->
+            <span>
+                @if (Model != null && Model.Any())
+                {
+                    <span>Create New Task</span>
+                }
+                else
+                {
+                    <span>Create First Task</span>
+                }
+            </span>
+        </a>
+
+        <!-- Toggle View Buttons -->
+        <div>
+            <button id="kanbanViewBtn" class="btn btn-sm btn-outline-primary me-2" onclick="toggleView(true)">Kanban</button>
+            <button id="floatingViewBtn" class="btn btn-sm btn-outline-secondary" onclick="toggleView(false)">Floating</button>
+        </div>
+    </div>
+</div>
 
 
 <!--- Kanban View --->
@@ -113,11 +57,15 @@
         {
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="kanban-column">
-                    <h5>@ToDoHelpers.GetStatusDisplayName(status)</h5>
+                    <div class="center-container text-center">
+                        <h3 class="text-muted" style="font-size: 1.25rem; font-weight: 300; margin-top: 20px;">
+                            @ToDoHelpers.GetStatusDisplayName(status)
+                        </h3>
+                    </div>
                     <div class="kanban-tasks">
                         @if (!Model.Any(t => t.Status == status))
                         {
-                            <p>No tasks in this category.</p>
+                            <p class="text-center bg-light p-4 rounded shadow-sm fs-5 text-dark mx-auto my-5" style="max-width: 400px;">No tasks in this category.</p>
                         }
                         @Html.Partial("_TaskList", Model.Where(t => t.Status == status))
                     </div>
@@ -127,10 +75,10 @@
     </div>
 </div>
 
-<!--- Floating View --->
+<!-- Floating View -->
 <div id="floatingView" style="display:none;">
-    <h2>Floating View</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 gx-4 gy-4">
+        <!-- Adjusting the horizontal (gx-4) and vertical (gy-4) gaps -->
         @if (Model.Count == 0)
         {
             <p>No tasks available. Click the button below to create a task.</p>
@@ -138,6 +86,7 @@
         @Html.Partial("_TaskList", Model)
     </div>
 </div>
+
 
 
 <!--- JavaScript for View Toggling --->

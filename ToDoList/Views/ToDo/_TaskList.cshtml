@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ToDoList.Models.ToDoItem>
+@using ToDoList.Helpers
+@using System.Globalization;
+
+@foreach (var item in Model)
+{
+    <div class="card custom-card shadow-lg mb-4" style="cursor: pointer;">
+        <div class="card-body">
+            <h5 class="card-title">@item.Title</h5>
+            <p class="card-text">
+                @((string.IsNullOrWhiteSpace(item.Details) ? "No details provided" :
+                    item.Details.Length > 80 ? item.Details.Substring(0, 80) + "..." :
+                    item.Details))
+            </p>
+
+            @if (item.Status != null)
+            {
+                var (badgeClass, iconClass) = ToDoHelpers.GetStatusClass(item.Status);
+                <div class="d-flex align-items-center mt-2">
+                    <span class="badge rounded-pill @badgeClass" style="font-size: 0.9em;"
+                          aria-label="@ToDoHelpers.GetStatusDisplayName(item.Status)">
+                        <i class="@iconClass" aria-hidden="true"></i>
+                        @ToDoHelpers.GetStatusDisplayName(item.Status)
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex align-items-center mt-2">
+                    <span class="badge rounded-pill bg-secondary" style="font-size: 0.9em;"
+                          aria-label="No status">
+                        <i class="fas fa-minus" aria-hidden="true"></i>
+                        No status
+                    </span>
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(item.AssignedTo))
+            {
+                <div class="d-flex align-items-center mt-3">
+                    <i class="fas fa-user-circle me-2" style="font-size: 1.5rem;" title="Assigned to"></i>
+                    <span class="text-muted">@item.AssignedTo</span>
+                </div>
+            }
+
+            <div class="d-flex align-items-center mt-2">
+                <i class="fas fa-calendar-alt me-2" title="Date Started"></i>
+                <small class="text-muted">
+                    Started: <time datetime="@item.DateStarted.ToString("yyyy-MM-ddTHH:mm:ss")">
+                        @item.DateStarted.ToString("MMM d, h:mm tt", CultureInfo.InvariantCulture)
+                    </time>
+                </small>
+            </div>
+
+            @if (item.DateOfCompletion.HasValue)
+            {
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fas fa-check-circle me-2" title="Date Completed"></i>
+                    <small class="text-muted">
+                        Completed: <time datetime="@item.DateOfCompletion.Value.ToString("yyyy-MM-ddTHH:mm:ss")">
+                            @item.DateOfCompletion.Value.ToString("MMM d, h:mm tt", CultureInfo.InvariantCulture)
+                        </time>
+                    </small>
+                </div>
+            }
+
+            <div class="d-flex justify-content-between mt-3">
+                <a href="@Url.Action("Edit", "ToDo", new { id = item.Id })" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                @Html.AntiForgeryToken() <!--IMPORTANT!!! IT WILL 404 NOT FOUND IF YOU DELETE THIS Generates the token -->
+                <button class="delete-btn btn btn-outline-danger btn-sm" data-id="@item.Id">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+}
