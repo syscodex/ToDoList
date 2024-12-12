@@ -46,8 +46,10 @@ Before diving in, ensure you have:
 📦 Installation Guide
 
 1️⃣ Clone the Repository
-bashCopygit clone https://github.com/your-username/ToDoList.git
+bash
+git clone https://github.com/syscodex/ToDoList.git
 cd ToDoList
+
 2️⃣ Configure Database Connection
 Update appsettings.json:
 jsonCopy{
@@ -62,7 +64,8 @@ dotnet restore
 # Apply migrations
 dotnet ef database update
 4️⃣ Launch Application
-bashCopy# Run the application
+bash
+# Run the application
 dotnet run
 🗂 Project Structure
 CopyToDoList/
